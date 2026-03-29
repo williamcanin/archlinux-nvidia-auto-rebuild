@@ -268,7 +268,12 @@ Quase sempre o problema é caminho incorreto do `.run` ou headers ausentes.
 
 ## 🎥 Demonstração do boot automático
 
-Você pode gravar um GIF do processo para mostrar o serviço rodando antes do gráfico.
+<video controls>
+  <source src=".github/boot.mp4" type="video/mp4">
+</video>
+
+
+<!-- Você pode gravar um GIF do processo para mostrar o serviço rodando antes do gráfico.
 
 Sugestão usando tty e `asciinema`:
 
@@ -282,4 +287,4 @@ Depois converta para GIF e adicione aqui:
 ![boot-demo](docs/boot-demo.gif)
 ```
 
-Isso ajuda muito quem visita o repositório a entender o funcionamento visualmente.
+Isso ajuda muito quem visita o repositório a entender o funcionamento visualmente. -->
