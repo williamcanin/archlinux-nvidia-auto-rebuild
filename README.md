@@ -1,4 +1,4 @@
-# NVIDIA `.run` auto‑rebuild no boot (Arch + Wayland)
+# NVIDIA `.run` auto-rebuild no boot (Arch + Wayland)
 
 Automatiza a reinstalação do driver proprietário da NVIDIA via `.run` no boot do Arch Linux, **antes** do ambiente gráfico iniciar — solução necessária para quem usa Wayland e não pode executar o instalador com o servidor gráfico ativo.
 
@@ -19,26 +19,45 @@ Sem TTY. Sem tela preta. Sem reinstalar manualmente.
 
 ---
 
-## ⚙️ Instalação
+## ⚙️ Instalação (recomendado)
 
 A partir da raiz deste repositório:
 
 ```bash
-sudo cp -r etc/ /
-sudo cp -r usr/ /
+chmod +x nvidia-auto-rebuild.sh
+sudo ./nvidia-auto-rebuild.sh install
+```
 
-sudo systemctl daemon-reload
-sudo systemctl enable nvidia-rebuild.service
+O script:
+
+* cria os diretórios necessários
+* copia os arquivos corretos para `/etc` e `/usr`
+* ajusta permissões
+* recarrega o systemd
+* habilita o serviço
+
+---
+
+## 🔎 Verificar status
+
+```bash
+./nvidia-auto-rebuild.sh status
 ```
 
 ---
 
-## ✅ Verifique se os arquivos estão no lugar
+## ♻️ Reinstalar
 
 ```bash
-ls /etc/pacman.d/hooks/nvidia-rebuild.hook
-ls /etc/systemd/system/nvidia-rebuild.service
-ls /usr/local/bin/nvidia-rebuild.sh
+sudo ./nvidia-auto-rebuild.sh reinstall
+```
+
+---
+
+## ❌ Remover tudo
+
+```bash
+sudo ./nvidia-auto-rebuild.sh uninstall
 ```
 
 ---
@@ -52,15 +71,11 @@ sudo touch /var/lib/nvidia-reinstall-required
 sudo reboot
 ```
 
-Durante o boot, o driver será recompilado automaticamente.
-
-Após entrar no sistema, confira o log:
+Após entrar no sistema:
 
 ```bash
 cat /var/log/nvidia-rebuild.log
 ```
-
-Se não houver erros, está tudo funcionando corretamente.
 
 ---
 
@@ -69,7 +84,7 @@ Se não houver erros, está tudo funcionando corretamente.
 O instalador `.run` da NVIDIA **não pode ser executado com Wayland/Xorg ativos**.
 Hooks do pacman rodam com o sistema gráfico em execução, portanto falham.
 
-A única forma estável é recompilar o driver **no boot, antes do gráfico**, que é exatamente o que este projeto faz.
+A única forma estável é recompilar o driver **no boot, antes do gráfico**.
 
 ---
 
@@ -77,7 +92,7 @@ A única forma estável é recompilar o driver **no boot, antes do gráfico**, q
 
 * Arch Linux
 * Kernel `linux-lts`
-* `linux-lts-headers` instalados
+* `linux-lts-headers`
 * Driver NVIDIA instalado via `.run` com suporte a `--dkms`
 * Caminho do `.run` ajustado em:
 
@@ -87,37 +102,54 @@ A única forma estável é recompilar o driver **no boot, antes do gráfico**, q
 
 ---
 
-## ⬇️ Baixando e preparando o arquivo `.run`
+## ⬇️ Baixando e preparando o `.run`
 
-Este projeto **não** instala o driver para você. Ele apenas automatiza a recompilação no boot.
-
-Você precisa baixar manualmente o instalador oficial da NVIDIA e colocá‑lo no caminho esperado pelo script.
+Este projeto **não instala o driver**. Ele apenas automatiza a recompilação no boot.
 
 1. Acesse:
+   [https://download.nvidia.com/XFree86/Linux-x86_64/](https://download.nvidia.com/XFree86/Linux-x86_64/)
 
-```
-https://download.nvidia.com/XFree86/Linux-x86_64/
-```
+2. Baixe a versão compatível com sua GPU (ex.: `NVIDIA-Linux-x86_64-580.126.18.run`)
 
-2. Baixe a versão do driver compatível com sua GPU (ex.: `NVIDIA-Linux-x86_64-580.126.18.run`).
-
-3. Crie o diretório em `/opt` e mova o arquivo para lá:
+3. Mova para `/opt`:
 
 ```bash
 sudo mkdir -p /opt/NVIDIA-Linux-x86_64-580.126.18
 sudo mv NVIDIA-Linux-x86_64-580.126.18.run /opt/NVIDIA-Linux-x86_64-580.126.18/
-```
-
-4. Dê permissão de execução:
-
-```bash
 sudo chmod +x /opt/NVIDIA-Linux-x86_64-580.126.18/NVIDIA-Linux-x86_64-580.126.18.run
 ```
 
-5. Confirme que o caminho no script corresponde exatamente a este local:
+4. Confirme que o caminho dentro do script corresponde a esse local:
 
 ```
 /usr/local/bin/nvidia-rebuild.sh
 ```
 
-> Se você atualizar a versão do driver no futuro, **lembre-se de atualizar também o caminho dentro do script**.
+> Ao atualizar a versão do driver, lembre-se de atualizar o caminho no script.
+
+---
+
+## 🧰 Instalação manual (modo antigo)
+
+<details>
+<summary>Clique para expandir</summary>
+
+A partir da raiz do repositório:
+
+```bash
+sudo cp -r etc/ /
+sudo cp -r usr/ /
+
+sudo systemctl daemon-reload
+sudo systemctl enable nvidia-rebuild.service
+```
+
+Verifique:
+
+```bash
+ls /etc/pacman.d/hooks/nvidia-rebuild.hook
+ls /etc/systemd/system/nvidia-rebuild.service
+ls /usr/local/bin/nvidia-rebuild.sh
+```
+
+</details>
