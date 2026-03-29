@@ -270,7 +270,7 @@ Quase sempre o problema é caminho incorreto do `.run` ou headers ausentes.
 
 <!-- [![Watch the boot demo](.github/thumb.png)](.github/boot.mp4) -->
 
-[![Watch the boot demo](.github/thumb.png)](https://github.com/williamcanin/archlinux-nvidia-auto-rebuild/releases/latest/download/boot.mp4)
+[![Watch the boot demo](.github/thumb.png)](https://github.com/williamcanin/archlinux-nvidia-auto-rebuild/releases/download/v1.0.0/boot.mp4)
 
 <!-- Você pode gravar um GIF do processo para mostrar o serviço rodando antes do gráfico.
 
