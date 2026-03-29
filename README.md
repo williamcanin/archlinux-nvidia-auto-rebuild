@@ -30,15 +30,16 @@ Sem TTY. Sem tela preta. Sem reinstalar manualmente.
 A partir da raiz deste repositório:
 
 ```bash
-chmod +x nvidia-auto-rebuild.sh
-sudo ./nvidia-auto-rebuild.sh install
+chmod +x init.sh
+sudo ./init.sh install
 ```
 
-O script:
+O `init.sh` é o **instalador oficial do projeto** e faz automaticamente:
 
-* cria os diretórios necessários
-* copia os arquivos corretos para `/etc` e `/usr`
-* ajusta permissões
+* copia `etc/` → `/etc`
+* copia `usr/` → `/usr`
+* baixa o `.run` oficial da NVIDIA para `/opt`
+* ajusta automaticamente o caminho do `.run` dentro de `/usr/local/bin/nvidia-rebuild.sh`
 * recarrega o systemd
 * habilita o serviço
 
@@ -46,25 +47,31 @@ O script:
 
 ## 🔎 Verificar status
 
+````bash
+./init.sh status
 ```bash
 ./nvidia-auto-rebuild.sh status
-```
+````
 
 ---
 
 ## ♻️ Reinstalar
 
+````bash
+sudo ./init.sh install
 ```bash
 sudo ./nvidia-auto-rebuild.sh reinstall
-```
+````
 
 ---
 
 ## ❌ Remover tudo
 
+````bash
+sudo ./init.sh uninstall
 ```bash
 sudo ./nvidia-auto-rebuild.sh uninstall
-```
+````
 
 ---
 
@@ -108,30 +115,35 @@ A única forma estável é recompilar o driver **no boot, antes do gráfico**.
 
 ---
 
-## ⬇️ Baixando e preparando o `.run`
+## ⬇️ Download automático do `.run`
 
-Este projeto **não instala o driver**. Ele apenas automatiza a recompilação no boot.
+O `init.sh` baixa automaticamente o instalador oficial da NVIDIA durante a instalação.
 
-1. Acesse:
-   [https://download.nvidia.com/XFree86/Linux-x86_64/](https://download.nvidia.com/XFree86/Linux-x86_64/)
-
-2. Baixe a versão compatível com sua GPU (ex.: `NVIDIA-Linux-x86_64-580.126.18.run`)
-
-3. Mova para `/opt`:
+Configuração usada no script:
 
 ```bash
-sudo mkdir -p /opt/NVIDIA-Linux-x86_64-580.126.18
-sudo mv NVIDIA-Linux-x86_64-580.126.18.run /opt/NVIDIA-Linux-x86_64-580.126.18/
-sudo chmod +x /opt/NVIDIA-Linux-x86_64-580.126.18/NVIDIA-Linux-x86_64-580.126.18.run
+BASE_DIR="/opt"
+URL="https://download.nvidia.com/XFree86/Linux-x86_64/"
+VERSION="NVIDIA-Linux-x86_64-580.126.18.run"
 ```
 
-4. Confirme que o caminho dentro do script corresponde a esse local:
+O arquivo é preparado em:
+
+```
+/opt/NVIDIA-Linux-x86_64-580.126.18/
+```
+
+E o caminho é injetado automaticamente dentro de:
 
 ```
 /usr/local/bin/nvidia-rebuild.sh
 ```
 
-> Ao atualizar a versão do driver, lembre-se de atualizar o caminho no script.
+Para atualizar a versão do driver no futuro, altere apenas a variável `VERSION` no `init.sh` e rode novamente:
+
+```bash
+sudo ./init.sh install
+```
 
 ---
 
@@ -159,6 +171,68 @@ ls /usr/local/bin/nvidia-rebuild.sh
 ```
 
 </details>
+
+---
+
+## ✨ Features
+
+* Rebuild automático do driver NVIDIA **antes** do Wayland iniciar
+* Integração limpa com `pacman hook`
+* Integração com `systemd` no estágio `sysinit`
+* Instalação e remoção via script único
+* Totalmente transparente ao usuário após configurado
+
+---
+
+## 🧭 Como funciona (fluxo interno)
+
+```text
+pacman atualiza kernel
+        ↓
+hook marca /var/lib/nvidia-reinstall-required
+        ↓
+reboot
+        ↓
+systemd (sysinit.target)
+        ↓
+nvidia-rebuild.service
+        ↓
+nvidia-rebuild.sh
+        ↓
+.run --dkms recompila o módulo
+        ↓
+mkinitcpio -P
+        ↓
+Wayland inicia já com o driver correto
+```
+
+---
+
+## 🗂️ Estrutura do repositório
+
+````text
+etc/
+ ├─ pacman.d/hooks/nvidia-rebuild.hook
+ └─ systemd/system/nvidia-rebuild.service
+
+usr/
+ └─ local/bin/nvidia-rebuild.sh   ← script que faz o rebuild real no boot
+
+init.sh                          ← instalador/desinstalador do projeto
+README.md
+LICENSE
+```text
+etc/
+ ├─ pacman.d/hooks/nvidia-rebuild.hook
+ └─ systemd/system/nvidia-rebuild.service
+
+usr/
+ └─ local/bin/nvidia-rebuild.sh
+
+nvidia-auto-rebuild.sh
+README.md
+LICENSE
+````
 
 ---
 
