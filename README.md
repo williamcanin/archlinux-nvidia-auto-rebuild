@@ -221,17 +221,6 @@ usr/
 init.sh                          ← instalador/desinstalador do projeto
 README.md
 LICENSE
-```text
-etc/
- ├─ pacman.d/hooks/nvidia-rebuild.hook
- └─ systemd/system/nvidia-rebuild.service
-
-usr/
- └─ local/bin/nvidia-rebuild.sh
-
-nvidia-auto-rebuild.sh
-README.md
-LICENSE
 ````
 
 ---
