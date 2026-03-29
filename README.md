@@ -1,5 +1,11 @@
 # NVIDIA `.run` auto-rebuild no boot (Arch + Wayland)
 
+![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=arch-linux\&logoColor=white)
+![Wayland](https://img.shields.io/badge/Display-Wayland-purple)
+![NVIDIA Proprietary](https://img.shields.io/badge/NVIDIA-.run%20driver-76B900?logo=nvidia\&logoColor=white)
+![Systemd](https://img.shields.io/badge/Init-systemd-000000?logo=systemd\&logoColor=white)
+![License](https://img.shields.io/badge/license-See%20LICENSE-blue)
+
 Automatiza a reinstalação do driver proprietário da NVIDIA via `.run` no boot do Arch Linux, **antes** do ambiente gráfico iniciar — solução necessária para quem usa Wayland e não pode executar o instalador com o servidor gráfico ativo.
 
 ---
@@ -153,3 +159,64 @@ ls /usr/local/bin/nvidia-rebuild.sh
 ```
 
 </details>
+
+---
+
+## 🩺 Troubleshooting
+
+### O serviço não executou no boot
+
+Verifique o status:
+
+```bash
+systemctl status nvidia-rebuild.service
+journalctl -u nvidia-rebuild.service -b
+```
+
+### O log mostra erro de compilação DKMS
+
+Confirme que os headers estão instalados:
+
+```bash
+pacman -Qs linux-lts-headers
+```
+
+### O `.run` não foi encontrado
+
+Edite o caminho dentro de:
+
+```
+/usr/local/bin/nvidia-rebuild.sh
+```
+
+E confirme que o arquivo existe e é executável.
+
+### Wayland não sobe após atualização
+
+Confira o log gerado:
+
+```bash
+cat /var/log/nvidia-rebuild.log
+```
+
+Quase sempre o problema é caminho incorreto do `.run` ou headers ausentes.
+
+---
+
+## 🎥 Demonstração do boot automático
+
+Você pode gravar um GIF do processo para mostrar o serviço rodando antes do gráfico.
+
+Sugestão usando tty e `asciinema`:
+
+```bash
+asciinema rec boot.cast
+```
+
+Depois converta para GIF e adicione aqui:
+
+```markdown
+![boot-demo](docs/boot-demo.gif)
+```
+
+Isso ajuda muito quem visita o repositório a entender o funcionamento visualmente.
