@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = linux-lts
+Target = linux-lts-headers
+
+[Action]
+Description = Marcando reinstalação do driver NVIDIA (.run) após update do kernel
+When = PostTransaction
+Exec = /usr/bin/touch /var/lib/nvidia-reinstall-required
