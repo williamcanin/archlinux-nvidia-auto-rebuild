@@ -268,9 +268,7 @@ Quase sempre o problema é caminho incorreto do `.run` ou headers ausentes.
 
 ## 🎥 Demonstração do boot automático
 
-<video controls>
-  <source src=".github/boot.mp4" type="video/mp4">
-</video>
+[![Watch the boot demo](.github/thumb.png)](.github/boot.mp4)
 
 
 <!-- Você pode gravar um GIF do processo para mostrar o serviço rodando antes do gráfico.
