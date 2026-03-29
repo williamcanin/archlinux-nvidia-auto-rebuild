@@ -47,31 +47,28 @@ O `init.sh` é o **instalador oficial do projeto** e faz automaticamente:
 
 ## 🔎 Verificar status
 
-````bash
-./init.sh status
 ```bash
+./init.sh status
 ./nvidia-auto-rebuild.sh status
-````
+```
 
 ---
 
 ## ♻️ Reinstalar
 
-````bash
-sudo ./init.sh install
 ```bash
+sudo ./init.sh install
 sudo ./nvidia-auto-rebuild.sh reinstall
-````
+```
 
 ---
 
 ## ❌ Remover tudo
 
-````bash
-sudo ./init.sh uninstall
 ```bash
+sudo ./init.sh uninstall
 sudo ./nvidia-auto-rebuild.sh uninstall
-````
+```
 
 ---
 
@@ -210,7 +207,7 @@ Wayland inicia já com o driver correto
 
 ## 🗂️ Estrutura do repositório
 
-````text
+```text
 etc/
  ├─ pacman.d/hooks/nvidia-rebuild.hook
  └─ systemd/system/nvidia-rebuild.service
@@ -221,7 +218,7 @@ usr/
 init.sh                          ← instalador/desinstalador do projeto
 README.md
 LICENSE
-````
+```
 
 ---
 
